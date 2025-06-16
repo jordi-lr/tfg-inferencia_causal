@@ -1,0 +1,140 @@
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{siunitx}
+\usepackage{microtype}
+\usepackage{cancel}
+\usepackage{bm}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{mdframed}
+\usepackage{enumerate}
+\usepackage[labelfont=bf]{caption}
+\usepackage{subcaption}
+\usepackage{xifthen}
+\usepackage[perpage, symbol]{footmisc} % 
+\usepackage{physics}
+\usepackage{dsfont}
+\usepackage{mathrsfs}
+\usepackage{bbold}
+\usepackage{epigraph}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\def\arraystretch{1.2}%  1 is the default, change whatever you need
+
+\usepackage[a4paper, 
+	left=30mm,
+	right=30mm,
+	top=30mm,
+	bottom=30mm]{geometry}
+	
+\addto\captionscatalan{%
+	\renewcommand{\figurename}{Figura}%
+}
+
+\newcommand{\listfl}[2]{#1,\dots,#2}
+
+\newcommand{\inangle}[1]{\langle #1 \rangle}
+\newcommand{\inpar}[1]{\left( #1 \right)}
+\newcommand{\insqr}[1]{\left[ #1 \right]}
+\newcommand{\inbrc}[1]{\left\lbrace #1 \right\rbrace}
+\newcommand{\inbars}[1]{\left| #1 \right|} % or \eval
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+\newcommand{\const}{ct.}
+\newcommand{\Real}{\mathds{R}}
+\renewcommand{\Re}[1]{\mathfrak{Re}\inbrc{#1}}
+\renewcommand{\Im}[1]{\mathfrak{Im}\inbrc{#1}}
+
+\newcommand{\hilbert}{\mathcal{H}}
+\newcommand{\measure}{\mathcal{M}}
+\newcommand{\system}{\mathcal{S}}
+\newcommand{\qop}{\mathcal{E}}
+\newcommand{\bell}{\mathcal{B}}
+\newcommand{\cnot}{\mathrm{CX}}
+\newcommand{\depol}{\mathcal{D}_{\mathrm{pol}}}
+\newcommand{\deph}{\mathcal{D}_{\mathrm{ph}}}
+\newcommand{\ampdam}{\mathcal{A}}
+\newcommand{\pX}{\sigma_x}
+\newcommand{\pY}{\sigma_y}
+\newcommand{\pZ}{\sigma_z}
+\newcommand{\protoc}{\mathcal{P}}
+\newcommand{\bellbasis}{\mathscr{B}}
+\newcommand{\prob}[1]{\mathds{P}\insqr{#1}}
+\newcommand{\expect}{\mathds{E}}
+
+\newcommand{\Id}{\mathds{I}}
+\newcommand{\vr}{\vec{r}}
+\newcommand{\vpauli}{\vec{\sigma}}
+\newcommand{\diag}[1]{\mathrm{diag}(#1)}
+\newcommand{\herm}{\mathscr{H}}
+\newcommand{\feas}{\mathscr{F}}
+\newcommand{\opt}{\mathscr{O}}
+\newcommand{\bern}{\mathscr{B}}
+\newcommand{\binnum}[1]{\{0,1\}^{#1}}
+
+%fractions
+\newcommand{\reci}[1]{\frac{1}{#1}}
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\halfpi}{\frac{\pi}{2}}
+\newcommand{\sqrtd}{\sqrt{2}}
+\newcommand{\fsqrtd}{\frac{1}{\sqrt{2}}}
+
+\newcommand{\lga}{\mathcal{L}}
+\newcommand{\hmt}{\mathrm{H}}
+
+% functions
+\newcommand{\asinh}{\mathrm{arcsinh}}
+\newcommand{\acosh}{\mathrm{arccosh}}
+\newcommand{\atanh}{\mathrm{arctanh}}
+
+
+\newcommand{\argmax}{\mathrm{arg\, max}}
+
+%derivates
+\newcommand{\dif}{\mathrm{d}} % use \dd
+\def\dbar{{\mathchar'26\mkern-12mu \mathrm{d}}} 
+\newcommand{\rot}[1]{\vec{\nabla}\times #1} % use \curl
+\newcommand{\lap}[1]{\nabla^2 #1} % use \laplacian
+
+%vectors
+\renewcommand{\vec}[1]{\bm{#1}}
+\newcommand{\vecs}[2][n]{#2_1,\dots,#2_{#1}} % v_1,...,v_n
+\newcommand{\scprod}[2]{\langle #1, #2 \rangle}
+
+\newcommand{\figref}[1]{fig.~\ref{#1}}
+
+\setlength{\epigraphwidth}{0.9\linewidth}
+\setlength{\epigraphrule}{0pt}
+\newcommand{\say}[3]{\epigraph{#1}{--- #2, \textit{#3}}}
+    
+\newenvironment{eqs}[1][]
+  {\subequations\ifthenelse{\isempty{#1}}{}{\label{#1}}\align}
+  {\endalign\endsubequations}
+
+\iffalse
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{}
+        \caption{}
+        \label{fig:my_label_1}
+    \end{subfigure}
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{}
+        \caption{}
+        \label{fig:my_label_2}
+    \end{subfigure}
+    \caption{}
+    \label{fig:my_label}
+\end{figure}
+\fi

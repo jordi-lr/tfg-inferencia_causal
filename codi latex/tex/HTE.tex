@@ -1,0 +1,126 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document} 
+
+\chapter{Efectes Heterogenis del Tractament} \label{ch:results}
+    Com he comentat anteriorment en parlar de l’ATE, aquesta mètrica ens permet calcular l’efecte mitjà d’un tractament  sobre la població. No obstant això, estudiar la heterogeneïtat dels efectes del tractament (HTE, per les seves sigles en anglès) esdevé especialment rellevant quan es vol fer una aproximació més individualitzada. Aquest enfocament té molt sentit en àmbits com la medicina —per decidir quin tractament és més adequat per a cada pacient— o en màrqueting —per determinar a qui dirigir una campanya publicitària de manera més eficient.\par
+    
+    En aquest context d’individualització del tractament, de fet, estem agrupant les unitats en subgrups en funció de certes covariables. Aquí és on tot el que s’ha comentat en el capítol anterior sobre la causalitat pren una gran importància: cal escollir amb criteri quines variables incloem al model. Si n’incloem massa, podem acabar generant una combinatòria intractable de grups amb molt pocs individus i si en triem massa poques, correm el risc d’ometre variables confusores importants. \citep{Kent2018}
+
+    Per altra banda, gràcies a la potencia computacional actual i les eines que s'han desenvolupat, avui en dia, es disposa d'estratègies robustes per poder fer prediccions individualitzades sobre l'efecte d'alguna intervenció o tractament. Per tant, les eines que es presenten a continuació representen una gran oportunitat per avançar en la presa de decisions individualitzada, en camps tant importants com la medicina o les polítiques publiques.
+
+    \section{Més enllà dels subgrups convencionals} \label{sec:subconven}
+    Una opció que sovint es planteja quan es parla d’efectes heterogenis del tractament és fer proves variable per variable, analitzant individualment cada característica de les unitats mostrals per veure si l’efecte del tractament varia segons aquell atribut. És una estratègia força comuna que consisteix a comparar l’efecte del tractament dins de subgrups definits per una sola covariable (com ara edat, sexe, etc.). Tot i això, aquest enfocament convencional presenta diversos inconvenients importants \citep{Kent2018}:
+    \begin{itemize}
+        \item \textbf{Baixa potència estadística:} Les dades dels assaigs clínics o dels estudis observacionals acostumen a estar dissenyades per estimar l’efecte mitjà del tractament, no per detectar interaccions. Quan estratifiquem per subgrups petits, sovint no tenim prou mostres per detectar diferències reals, de manera que alguns efectes poden passar desapercebuts tot i ser clínicament rellevants.
+        \item \textbf{Alt risc de falsos positius:} Com que es fan moltes proves d’interacció sense una hipòtesi prèvia sòlida, augmenta el risc d’obtenir resultats significatius per atzar. Això incrementa l’error de tipus I. Si es busquen diferències sense una reflexió causal al darrere, es poden identificar com a rellevants alguns subgrups que en realitat no ho són.
+        \item \textbf{Simplificació excessiva de la realitat:} Aquesta estratègia tracta les covariables de manera aïllada, però la realitat clínica i social és multivariable: múltiples factors poden actuar simultàniament i interactuar entre ells. Això fa que l’anàlisi one-variable-at-a-time sigui massa simplista i no representi adequadament la complexitat dels individus.
+        \item \textbf{Ús inadequat de l’escala d’efecte:} Sovint, aquests estudis informen els resultats en termes relatius (com hazard ratios o odds ratios), que poden ser útils per valorar l’eficàcia general del tractament, però no aporten informació directa sobre els beneficis absoluts, que són més rellevants per a la presa de decisions clíniques.
+    \end{itemize}
+
+    Per superar aquestes limitacions, s’han desenvolupat enfocaments més robustos i fiables, que parteixen del concepte de modelització. En concret, podem distingir dues estratègies principals:
+    \begin{itemize}
+        \item Modelització del risc (risk modeling): Aquesta aproximació estratifica la població segons el risc basal estimat de patir l’outcome d’interès (abans del tractament) i examina com varia l’efecte del tractament en funció d’aquest risc. Això permet identificar, per exemple, si en termes absoluts els pacients de risc més alt es beneficien més del tractament.
+        \item Modelització de l’efecte (effect modeling): Aquesta estratègia modela directament l’efecte del tractament com a funció de les covariables, permetent detectar modificadors d’efecte i estudiar com diferents característiques influeixen en la magnitud de l’efecte causal. Això és especialment útil en inferència causal, ja que permet una comprensió més profunda dels mecanismes subjacents.
+    \end{itemize}
+    
+    
+    \section{CATE} \label{sec:CATE}
+    Pel que fa a calcular l’efecte del tractament en un context on interessa analitzar-ne la heterogeneïtat, guanya rellevància una mesura similar a l’ATE, però condicionada a certes covariables. És així com neix el Conditional Average Treatment Effect (CATE), que es pot entendre com una versió local o estratificada de l’ATE. Formalment, el CATE es defineix com:
+    \begin{equation}
+        \begin{split}
+            CATE(X) &= \mathbb{E}[Y(1) - Y(0) \mid X] \\
+            &= \mathbb{E}[Y \mid T = 1, X] - \mathbb{E}[Y \mid T = 0, X] \\
+            &= \mathbb{E}[Y_1 \mid X] - \mathbb{E}[Y_0 \mid X]
+        \end{split}
+    \end{equation}
+
+     Aquesta expressió representa l’efecte mitjà del tractament per a les unitats amb unes característiques concretes $x$ i permet entendre com l’efecte del tractament varia entre diferents subgrups de la població.\par
+    Per explicar-ho d’una manera senzilla: si l’ATE ens diu quin és l’efecte mitjà del tractament a tota la població (la diferència esperada entre el resultat amb i sense tractament), el CATE ens diu quin és aquest efecte per a un subgrup concret, segons unes característiques observables.\par
+    Ara, diversos conceptes que ja havíem tractat al capítol \ref{ch:intro} prenen una rellevància especial. D’una banda, caldrà continuar tenint molt presents les diferents assumpcions necessàries per obtenir resultats vàlids. Alhora, serà fonamental entendre com flueix la causalitat dins del nostre model, per tal d’identificar correctament quin paper juguen les diferents variables. D’altra banda, conceptes com el propensity score, que utilitzarem en alguns mètodes per estimar l’efecte del tractament, també ens aporten informació rellevant sobre com les característiques individuals afecten l’assignació al tractament.\par
+    Finalment, no podem oblidar el que és probablement el repte més bàsic de la inferència causal: el problema dels contrafactuals. No podem observar mai una mateixa unitat amb i sense tractament alhora. Tanmateix, el CATE ens ofereix una via per aproximar aquest valor contrafactual a partir de la comparació entre unitats amb característiques similars, fent ús de l’esperança condicional.
+
+
+
+
+    \section{Mètodes per estudiar l'efecte heterogeni del tractament} \label{sec:metodes}
+    Per tal de respondre les preguntes que sorgeixen en un context d’estudi dels efectes heterogenis del tractament, han aparegut diferents estratègies metodològiques. Amb l’augment de la capacitat computacional, ha guanyat protagonisme l’ús del machine learning, que, tot i estar pensat inicialment per a la predicció, ha estat adaptat en diversos casos per tal d’incorporar-hi una interpretació causal.\par
+    Existeixen múltiples maneres de classificar els mètodes per abordar l’HTE, però considero especialment interessant la proposta de \cite{lipkovich2023}, que organitza els enfocaments en quatre grans grups segons quin component del procés causal modelen:
+    
+    \begin{enumerate}
+    \item \textbf{Modelatge de la resposta condicional} $(\mathbb{E}[Y \mid T = t, X = x])$:\\
+    Aquests mètodes modelen la resposta esperada per a cada nivell de tractament, i després obtenen el CATE com la diferència entre les prediccions per $T = 1$ i $T = 0$. Són mètodes flexibles que permeten aplicar algoritmes de regressió o machine learning coneguts. Inclouen els anomenats meta-learners, com el S-learner, el T-learner, l’X-learner (que pot considerar-se híbrid per la seva estratègia de reponderació), i el R-learner. 
+    \item \textbf{Modelatge directe del CATE} $(\tau(x) = \mathbb{E}[Y(1) - Y(0) \mid X = x])$:\\
+    En lloc d’estimar separadament les respostes sota tractament i control, aquests mètodes es centren a estimar directament l’efecte del tractament condicionat a les covariables. Aquesta estratègia permet capturar millor la variabilitat de l’HTE, especialment en contextos d’alta dimensionalitat. Exemples destacats són els Causal Forests, els Bayesian Additive Regression Trees (BART) i els Bayesian Causal Forests (BCF). Alguns d’aquests mètodes permeten també inferència estadística, com el càlcul d’intervals de confiança per a $\tau(x)$ .
+    \item \textbf{Modelatge de la regla òptima de tractament}:\\
+    Aquí l’objectiu no és estimar el CATE, sinó trobar una funció de decisió $D(x)$ que assigni a cada individu el tractament amb més benefici esperat. Aquesta aproximació és especialment útil quan la finalitat és la presa de decisions individualitzades. Alguns dels mètodes més utilitzats són l’Outcome Weighted Learning (OWL), el Residual Weighted Learning (RWL) i els Policy Trees. Aquests mètodes es basen en criteris d’optimització i poden ser menys transparents en la interpretació, però molt potents en aplicacions pràctiques.
+    \item \textbf{Identificació directa de subgrups amb efectes diferencials}:\\
+    Aquests mètodes no busquen estimar $\tau(x)$ per a cada individu, sinó identificar subgrups dins de la població on l’efecte del tractament és significativament diferent del global. Són especialment útils en fases exploratòries o per segmentar poblacions diana. Exemples rellevants inclouen el SIDES, el PRIM el CAPITAL, i el Sequential BATTing. Aquests algorismes solen ser interpretables i generen regles clares, però poden ser sensibles a la selecció de variables i al soroll de les dades.
+    \end{enumerate}
+    
+     Més enllà d’aquesta classificació, també és rellevant entendre com funcionen i quins resultats tenen alguns dels mètodes més utilitzats a la pràctica \citep{inoue2024}. En les subseccions següents es presenten, d’una banda, els enfocaments més clàssics, i de l’altra, els arbres i boscos causals i la seva versió bayesiana. I finalment, es dedicaran els següents capítols als meta-learners, la metodologia central d’aquest treball.
+
+
+    \subsection{Mètodes clàssics}\label{subsec:mclassic}
+    Un cop superada l’estratègia clàssica d’analitzar subgrups de manera individual (secció \ref{sec:subconven}), també es poden considerar algunes estratègies clàssiques més formals per estudiar l’HTE, com els models de regressió amb interaccions o la estratificació segons covariables rellevants. Tot i que continuen sent metodologies senzilles i intuïtives, també arrosseguen limitacions importants com la baixa potència estadística o la falta de control per variables confusores quan no es fa una estratègia d'ajust adequada.\par
+    D’altra banda, l’ús del propensity score pot ajudar a reduir el biaix de selecció en dades observacionals, i es pot integrar tant en models de regressió com en estratègies d’estratificació. Tot i això, el fet de resumir totes les covariables en una sola probabilitat pot fer perdre capacitat d’interpretació directa sobre quines característiques modulen l’efecte del tractament. \par
+    Aquests enfocaments, malgrat ser més limitats, representen un pas important cap a mètodes més sofisticats, que explorarem a continuació.
+
+
+    \subsection{Arbres causals} \label{subsec:CT}
+
+    Els Causal Trees, proposats per \cite{athey2016CT}, són una extensió dels arbres de decisió clàssics dissenyats per estimar efectes causals heterogenis (HTE). A diferència dels arbres tradicionals de regressió o classificació, que minimitzen l’error de predicció de l’outcome $Y$, els Arbres Causals construeixen particions binàries de l’espai de covariables amb l’objectiu de maximitzar les diferències d’efecte del tractament entre subgrups. A cada fulla $L$ s’estima el CATE com
+    \begin{equation}
+    \hat{\tau}(x)=
+    \frac{1}{n_t(L)}\sum_{i\in L:\,W_i=1}Y_i-
+    \frac{1}{n_c(L)}\sum_{i\in L:\,W_i=0}Y_i,
+    \end{equation}
+
+    on $n_t(L)$ i $n_c(L)$ són, respectivament, el nombre d’observacions tractades i control a la fulla $L$. \par
+    Per evitar biaixos, cada arbre és honest: es divideixen les dades de manera que queda una meitat ($S_{training}$) per determinar quines covariables i quins punts de tall formen l’esquelet de l’arbre; un segona ($S_{estimation}$) serveix exclusivament per estimar $\hat{\tau}(x)$ a les fulles. Cap observació decideix el tall i, alhora, influeix en l’estimació de l’efecte dins del tall que ha creat. De manera que els intervals de confiança resultants són robustos, ja que s'elimina una part molt important del biaix i possible sobreajust.\par
+    La millor divisió de cada node es tria maximitzant la versió estimada de l’Expected Mean Squared Error (EMSE) de l’efecte causal:
+    \begin{equation}
+        \widehat{\operatorname{EMSE}}_{\tau}\bigl(S^{\mathrm{tr}},\Pi\bigr)=
+        \frac{1}{N^{\mathrm{tr}}}\sum_{i\in S^{\mathrm{tr}}}\hat{\tau}^{2}(X_i;S^{\mathrm{tr}},\Pi)
+        -
+        \frac{2}{N^{\mathrm{tr}}}\sum_{\ell\in\Pi}
+        \left(
+        \frac{S_{\text{treat}}^{2,\mathrm{tr}}(\ell)}{p}+
+        \frac{S_{\text{control}}^{2,\mathrm{tr}}(\ell)}{1-p}
+        \right)
+    \end{equation}    
+
+    on $S^{\mathrm{tr}}$ és la mostra utilitzada per triar la partició $\Pi$, $N^{\mathrm{tr}}$ és el tamany de $|S^{\mathrm{tr}}|$, $S_{\text{treat}}^{2,\mathrm{tr}}(\ell)$ i $S_{\text{control}}^{2,\mathrm{tr}}(\ell)$ són les variàncies mostral dins la fulla $\ell$ per als grups tractat i control, i $p$ és la probabilitat de ser tractats (o la proporció de tractats).\par
+    Al minimitzar aquesta expressió en hem de fixar que el primer terme premia particions amb efectes grans i el segon penalitza la variabilitat interna (especialment en fulles desbalancejades).\par 
+    La “honestedat” al contruir l'arbre el que garanteix que la inferència pugui fer‐se amb l’estadístic clàssic:
+    \begin{equation}
+        \text{IC}_{1-\alpha}\!\bigl[\hat{\tau}(L)\bigr] = \hat{\tau}(L) \pm z_{1-2/\alpha} \sqrt{\frac{s_{t}^{2}(L)}{n_{t}(L)} + \frac{s_{c}^{2}(L)}{n_{c}(L)}}
+    \end{equation}
+
+    on $i$ són els nombres d’observacions i les variàncies mostral.\par
+    La interpretació del HTE se centra en tres aspectes: (i) la magnitud i el signe de ; (ii) si l’interval de confiança exclou el zero; i (iii) l’estabilitat de la fulla, que depèn de disposar de prou tractats i controls. Subgrups amb efectes elevats, intervals estrets i mides equilibrades es consideren evidència robusta d’heterogeneïtat, mentre que fulles amb pocs casos o IC amplis s’interpreten amb precaució.\par
+
+    \vspace{1cm}
+    
+    Tot i aquesta cura, un únic arbre continua sent sensible a petites fluctuacions de les dades, els resultats poden dependre molt de quines dades utilitzem.\par 
+    Per afegir robustesa al model \cite{wager2018CF} milloren el mètode amb els Causal Forests: fan $B$ arbres independents utilitzant bootstrap, és a dir, agafant $B$ particions de les dades amb remplaçament per fer els diferents arbres amb dades diferents. Finalment s’agreguen les seves prediccions per poder obtenir els $\hat{\tau}(x)$:
+    \begin{equation}
+        \hat{\tau}_{\text{CF}}(x)=\frac{1}{B}\sum_{b=1}^{B}\hat{\tau}^{(b)}(x)
+    \end{equation}
+    L’agregació fa que els errors individuals de possibles arbres desproporcionats es cancel·lin, produint una estimació més estable i precisa. Mitjançant l’Infinitesimal Jackknife es poden construir intervals de confiança vàlids fins i tot en escenaris amb moltes covariables i interaccions complexes, fet que el fa una solució molt viable en molts contextos d'inferència causal.\par
+    En aquest cas, aprofitant les submostres amb bootstrap, és recomenat fer servir la metodologia de l’Infinitesimal Jackknife, que produeix:
+    \begin{equation}
+        \widehat{\operatorname{Var}}_{\mathrm{IJ}}\!\bigl[\hat{\tau}_{\mathrm{CF}}(x)\bigr],
+        \qquad
+        \text{IC}_{95\%}= \hat{\tau}_{\mathrm{CF}}(x) \pm 1.96\,
+        \sqrt{\widehat{\operatorname{Var}}_{\mathrm{IJ}}\!\bigl[\hat{\tau}_{\mathrm{CF}}(x)\bigr]}
+    \end{equation}
+    L’avaluació del HTE es duu a terme (i) inspeccionant la distribució de totes les : una concentració prop de zero suggereix efectes uniformes, mentre que valors extrems, les “cues llargues”, revelen subgrups amb beneficis o riscos marcats; i (ii) ordenant la població per per simular polítiques com “tractar només els percentils superiors” i quantificar el guany causal esperat. Les covariables amb major contribució a la variància (importància de variables) ajuden a identificar els factors que expliquen aquesta heterogeneïtat. L’HTE es considera operativament rellevant quan els percentils extrems presenten intervals que no inclouen el zero i les proves de calibratge confirmen la fiabilitat del bosc.
+
+
+    \subsection{Arbres causals bayesians} \label{subsec:BCF}
+    Els Bayesian Causal Forests (BCF) són una extensió bayesiana dels Causal Forests convencionals, proposats per \cite{hahn2020BCT}, pensats per a l’estimació d’efectes heterogenis del tractament (HTE) en contextos observacionals. El model parteix d’una descomposició de l’outcome Y en dues components: una part pronòstica, $\mu(X)$, que captura com es comporta el resultat independentment del tractament, i una part causal, $\tau(x)$, que representa l’efecte del tractament que volem estimar. La clau és que cadascuna d’aquestes funcions s’estima mitjançant un bosc d’arbres (forests) separat, amb priors bayesians que permeten controlar la complexitat i la regularització.\par
+    Un aspecte distintiu dels BCF és que incorporen de manera explícita la incertesa mitjançant el càlcul de la distribució posterior dels efectes del tractament, i permeten obtenir intervals de credibilitat per a $\tau(x)$. A més, sovint es fa servir el propensity score com una covariable dins del model de $\mu(X)$, ajudant a controlar el biaix derivat d’una assignació no aleatòria del tractament. Aquesta separació entre els efectes pronòstics i causals, juntament amb l’enfocament bayesià, permet una estimació més robusta i interpretable, especialment útil en aplicacions mèdiques i en ciències socials on els efectes del tractament poden variar considerablement entre individus.
+    
+    
+\end{document}
