@@ -7,7 +7,7 @@ library(DT)
 library(broom)
 library(forcats)
 
-fitxer_sav <- "C:/Users/X421/Desktop/tfg/tfg estadistica/PART PRACTICA/IMPACT_Final_All_V17_alumnes.sav"
+fitxer_sav <- "dades.sav"
 num_arbres <- 500
 
 # funció bootstrap IC
